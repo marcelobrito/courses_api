@@ -1,0 +1,26 @@
+{
+    "compilerOptions": {
+      "outDir": "dist",
+      "strict": true,
+      "noImplicitAny": true, 
+      "strictNullChecks": true,
+      "target": "ES2022",
+      "module": "commonjs",
+      "typeRoots": ["./node_modules/@types"],
+      "esModuleInterop": true,
+      "sourceMap": true,
+      "rootDirs": ["src"],
+      "baseUrl": "src",
+      "types": ["jest", "node"],
+      "resolveJsonModule": true,
+      "lib": ["ES2022"],
+      "paths": {
+        "*": [
+          "./src/*",
+        ]
+      }
+    },
+    "include": ["src", "tests"],
+    "exclude": ["node_modules"],
+  }
+  

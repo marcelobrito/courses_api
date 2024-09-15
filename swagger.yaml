@@ -1,0 +1,225 @@
+swagger: "2.0"
+info:
+  description: "Documentation for backend assessment API."
+  version: "1.0.0"
+  title: "Backend assessment API"
+basePath: "/v1"
+tags:
+  - name: "Courses"
+    description: "Operations related to courses"
+schemes:
+  - "http"
+paths:
+  /login:
+    post:
+      tags:
+        - "login"
+      summary: "Login"
+      description: "Login URL."
+      consumes:
+        - "application/json"
+      parameters:
+        - in: "body"
+          name: "credentials"
+          description: "Credentials object."
+          required: true
+          schema:
+            $ref: "#/definitions/Credentials"
+      responses:
+        200:
+          description: "Login successfully."
+          schema:
+            $ref: "#/definitions/Token"
+        422:
+          description: "Invalid Credentials."
+  /courses:
+    get:
+      tags:
+        - "courses"
+      summary: "Get all courses"
+      description: "Retrieve a list of all courses."
+      security:
+        - BearerAuth: []
+      produces:
+        - "application/json"
+      parameters:
+        - name: title
+          in: query
+          required: false
+          type: string
+        - name: description
+          in: query
+          required: false
+          type: number
+        - name: duration
+          in: query
+          required: false
+          type: string
+        - name: instructor
+          in: query
+          required: false
+          type: string
+      responses:
+        200:
+          description: "A list of courses."
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/Course"
+    post:
+      tags:
+        - "courses"
+      summary: "Create a new course"
+      description: "Create a new course with the provided data."
+      security:
+        - BearerAuth: []
+      consumes:
+        - "application/json"
+      parameters:
+        - in: "body"
+          name: "course"
+          description: "Course object that needs to be added."
+          required: true
+          schema:
+            $ref: "#/definitions/PartialCourse"
+      responses:
+        201:
+          description: "Course created successfully."
+          schema:
+            $ref: "#/definitions/Course"
+        422:
+          description: "Invalid input."
+  /courses/{courseId}:
+    get:
+      tags:
+        - "courses"
+      summary: "Get a course by ID"
+      description: "Retrieve a course by its unique ID."
+      security:
+        - BearerAuth: []
+      produces:
+        - "application/json"
+      parameters:
+        - name: "courseId"
+          in: "path"
+          description: "ID of the course to retrieve."
+          required: true
+          type: "string"
+      responses:
+        200:
+          description: "A course object."
+          schema:
+            $ref: "#/definitions/Course"
+        404:
+          description: "Course not found."
+    put:
+      tags:
+        - "courses"
+      summary: "Update a course"
+      description: "Update the details of an existing course."
+      security:
+        - BearerAuth: []
+      consumes:
+        - "application/json"
+      parameters:
+        - name: "courseId"
+          in: "path"
+          description: "ID of the course to update."
+          required: true
+          type: "string"
+        - in: "body"
+          name: "course"
+          description: "Updated course object."
+          required: true
+          schema:
+            $ref: "#/definitions/PartialCourse"
+      responses:
+        200:
+          description: "Course updated successfully."
+          schema:
+            $ref: "#/definitions/Course"
+        422:
+          description: "Invalid input."
+        404:
+          description: "Course not found."
+    delete:
+      tags:
+        - "courses"
+      summary: "Delete a course"
+      description: "Delete a course by its unique ID."
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: "courseId"
+          in: "path"
+          description: "ID of the course to delete."
+          required: true
+          type: "string"
+      responses:
+        200:
+          description: "Course deleted successfully."
+        404:
+          description: "Course not found."
+
+securityDefinitions:
+  BearerAuth:
+    type: apiKey
+    name: Authorization
+    in: header
+
+definitions:
+  Credentials:
+    type: "object"
+    required:
+      - "username"
+      - "password"
+    properties:
+      username:
+        type: "string"
+      password:
+        type: "string"
+  Token:
+    type: "object"
+    properties:
+      token:
+        type: "string"
+  Course:
+    type: "object"
+    required:
+      - "id"
+      - "title"
+      - "description"
+      - "duration"
+      - "instructor"
+    properties:
+      id:
+        type: "string"
+        example: "8b839b85-5317-4375-ae0f-2605856a4fe9"
+      title:
+        type: "string"
+        example: "Nodejs Course"
+      description:
+        type: "string"
+        example: "A complete nodejs course"
+      duration:
+        type: "number"
+        example: "3600"
+      instructor:
+        type: "string"
+        example: "John"
+  PartialCourse:
+    type: "object"
+    properties:
+      title:
+        type: "string"
+      description:
+        type: "string"
+      duration:
+        type: "number"
+      instructor:
+        type: "string"
+    required:
+      - title
+      - description
+      - duration
+      - instructor

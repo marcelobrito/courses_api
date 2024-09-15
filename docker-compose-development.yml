@@ -1,0 +1,10 @@
+services:
+  api:
+    build: .
+    env_file: ./.env
+    #command: bash -c "npm ci && npm run build && npm run dev"
+    command: "npm run dev"
+    volumes:
+      - ./:/usr/src/api/
+    ports:
+      - 3000:3000
